@@ -28,7 +28,7 @@ def makestudents(filename="students.csv"):
 
     namefile = pd.read_csv(filename)
     for index, row in namefile.iterrows():
-        first = row['First Name']
+        first = row['First Name'].replace(" ","_")
         last = row['Last Name']
         email = f"{row['Email']}@msu.edu"
         name = f"{first}_{last}"
@@ -100,7 +100,7 @@ class gradernames():
                                 
         #Give OS time to make folders (Helps bugs on some systems)
         time.sleep(2)
-    
+
 
 def importnb(this_notebook):
     """ Import a student ipynb file into the current instructorsnbgrading system. 
@@ -156,7 +156,7 @@ def quick_review_D2L(zipfile="nbTester_data.zip", folder='unziptemp'):
 def D2L_2_nbgrader(zipfile, assignment, destination='AutoGrader/submitted', tempfolder='unziptemp'):
     unpackD2L(zipfile, destination=tempfolder)
     expandfiles(assignment, source=tempfolder, destination=destination)
-          
+
 def expandfiles(assignment, source='unziptemp', destination='AutoGrader/submitted'):
     nbfile = nbfilename(assignment)
     nbfile.isInstructor = False
@@ -171,7 +171,7 @@ def expandfiles(assignment, source='unziptemp', destination='AutoGrader/submitte
         newname = Path(myfolder / Path(str(nbfile)))
         print(newname)                                     
         thisfile.replace(newname)
-    
+
 
 def unpackD2L(filename, destination='unziptemp'):
     #from urllib.request import urlretrieve
@@ -189,7 +189,7 @@ def unpackD2L(filename, destination='unziptemp'):
     for f in files:
         print(f)
         name = str(f).split(' - ')
-        [first, last] = name[1].split(' ')
+#         [first, last] = name[1].split(' ')
         newfile = Path(name[1].replace(' ', '_')+'.ipynb')
         #print(destination_folder / newfile)
         f.replace(Path(destination / newfile))
@@ -227,7 +227,7 @@ def d2l_grades(nbgrader_assignment_name = 'HW1-Systems_of_linear_equations',
     
     return Markdown(f"[{outfile}]({outfile})")
 
-          
+
 def sendfeedback(assignment_name, 
                  subject='MTH314 Assignment Feedback', 
                  graded_message=None,
@@ -341,7 +341,7 @@ def sendfeedback(assignment_name,
                 print("\n\n")
     s.quit()
 
-                      
+
 def upload_D2L_submissions(instructorfile = 'HW1-Systems_of_linear_equations-INSTRUCTOR.ipynb', zipfile="./D2L/HW1-Test.zip"):
     import thiscourse
     from jupyterinstruct import InstructorNotebook
@@ -362,5 +362,5 @@ def upload_D2L_submissions(instructorfile = 'HW1-Systems_of_linear_equations-INS
     command = f"echo pwd; cd AutoGrader; ls; nbgrader autograde {nbfile.basename()}"
     returned_output = subprocess.check_output(command, shell=True)
     print(f"Output: {returned_output.decode('utf-8')}")                      
-#     !cd "~/_CMSE314_F20/AutoGrader"; nbgrader generate_feedback HW1-Systems_of_linear_equations                  
-                      
+    # !cd "~/_CMSE314_F20/AutoGrader"; nbgrader generate_feedback HW1-Systems_of_linear_equations                  
+
